@@ -1,0 +1,234 @@
+ORG	0
+
+/checks for the operator chosen, by testing it for its ASCII code
+Menu,	INPUT
+	STORE	OPERATION
+	LOAD	OPERATION
+	SUBT	FOURTY_THREE
+	SKIPCOND	400
+	JUMP	Block1
+	JUMP	Addition
+
+/checks for subtraction operator
+Block1,	LOAD	OPERATION
+	SUBT	FOURTY_FIVE
+	SKIPCOND	400
+	JUMP	Block2
+	JUMP	Subtraction
+
+/checks for multiplication operator
+Block2,	LOAD	OPERATION
+	SUBT	FOURTY_TWO
+	SKIPCOND	400
+	JUMP	Block3
+	JUMP	Multiplication
+
+/checks for division operator
+Block3,	LOAD	OPERATION
+	SUBT	FOURTY_SEVEN
+	SKIPCOND	400
+	JUMP	End
+	JUMP	Division
+
+/following blocks perform addition of input values
+Addition,	LOAD	ZERO
+		STORE	RESULT
+		LOAD	ZERO
+		STORE	NUMBER
+
+AdditionCond,	INPUT	
+		STORE	VALUE
+		SUBT	TEN
+		SKIPCOND	000
+		JUMP	Menu
+		LOAD	VALUE
+		STORE	NUMBER
+
+AdditionLoop,	LOAD	RESULT
+		ADD	NUMBER
+		STORE	RESULT	
+	
+		LOAD	RESULT
+		OUTPUT
+		JUMP	AdditionCond
+
+/following blocks perform subtraction of input values. 
+/the specific block reads in the minimum value that the subtraction result may reach
+Subtraction,	LOAD	ZERO
+		STORE	RESULT
+		LOAD	ZERO
+		STORE	NUMBER
+		LOAD	ZERO
+		STORE	MINIMUM
+		INPUT	
+		STORE	MINIMUM
+
+InitialiseSubtractionResult,	INPUT	
+				STORE	VALUE
+				SUBT	TEN
+				SKIPCOND	000
+				JUMP	Menu
+				LOAD	VALUE
+				STORE	RESULT
+
+				LOAD	RESULT
+				OUTPUT
+
+SubtractionCond,	INPUT	
+			STORE	VALUE
+			SUBT	TEN
+			SKIPCOND	000
+			JUMP	Menu
+
+			LOAD	VALUE
+			STORE	NUMBER
+
+			LOAD	RESULT
+			SUBT	NUMBER
+			STORE	TEMP	
+			LOAD	MINIMUM	
+			SUBT	TEMP
+	
+			SKIPCOND	800
+			JUMP	SubtractionLoop
+			JUMP	Menu
+		
+SubtractionLoop,	LOAD	RESULT
+			SUBT	NUMBER
+			STORE	RESULT	
+	
+			LOAD	RESULT
+			OUTPUT
+			JUMP	SubtractionCond
+
+/following blocks perform multiplication of input values
+Multiplication,	LOAD	ZERO
+		STORE	NUMBER1
+		LOAD	ZERO
+		STORE	NUMBER2
+		LOAD	ZERO
+		STORE	COUNTER
+		LOAD	ZERO
+		STORE	TEMP
+		INPUT
+		STORE	VALUE
+		SUBT	TEN
+		SKIPCOND	000
+		JUMP	Menu
+
+		LOAD	VALUE
+		STORE	NUMBER1
+		OUTPUT
+
+
+MultiplicationCond1,	INPUT
+			STORE	VALUE
+			SUBT	TEN
+			SKIPCOND	000
+			JUMP	Menu
+	
+			LOAD	VALUE
+			STORE	NUMBER2
+
+MultiplicationCond2,	LOAD	COUNTER
+			SUBT	NUMBER2
+			SKIPCOND	000
+			JUMP	MultiplicationPrint
+
+MultiplicationLoop,	LOAD	TEMP
+			ADD	NUMBER1
+			STORE	TEMP
+
+			LOAD	COUNTER
+			ADD	ONE
+			STORE	COUNTER
+	
+			JUMP	MultiplicationCond2
+
+MultiplicationPrint,	LOAD	TEMP
+			STORE	NUMBER1
+			OUTPUT
+			LOAD	ZERO
+			STORE	TEMP
+			LOAD	ZERO
+			STORE	COUNTER
+			JUMP	MultiplicationCond1
+
+/following blocks perform a division of input values
+Division,	LOAD	ZERO
+		STORE	NUMBER1
+		LOAD	ZERO
+		STORE	NUMBER2
+		LOAD	ZERO
+		STORE	QUOTIENT
+		INPUT
+		STORE	VALUE
+		SUBT	TEN
+		SKIPCOND	000
+		JUMP	Menu
+
+		LOAD	VALUE
+		STORE	NUMBER1
+		OUTPUT
+
+DivisionCond1,	INPUT
+		STORE	VALUE
+		SUBT	TEN
+		SKIPCOND	000
+		JUMP	Menu
+	
+		LOAD	VALUE
+		STORE	NUMBER2
+
+/checks if the input (divisor) is zero. If so, it exits the division operation
+DivisionCond2,	LOAD	NUMBER2
+		SKIPCOND	400
+		JUMP	DivisionCond3
+		JUMP	Menu
+
+DivisionCond3,	LOAD	NUMBER2
+		SUBT	NUMBER1
+		SKIPCOND	800
+		JUMP	DivisionLoop
+		JUMP	DivisionPrint
+
+DivisionLoop,	LOAD	NUMBER1
+		SUBT	NUMBER2
+		STORE	NUMBER1
+
+		LOAD	QUOTIENT
+		ADD	ONE
+		STORE	QUOTIENT
+
+		JUMP	DivisionCond3
+
+DivisionPrint,	LOAD	QUOTIENT
+		STORE	NUMBER1
+		OUTPUT
+		LOAD	ZERO	
+		STORE	QUOTIENT
+		JUMP	DivisionCond1
+
+End,	HALT
+
+/constants
+FOURTY_TWO,	DEC	42
+FOURTY_THREE,	DEC	43
+FOURTY_FIVE,	DEC	45
+FOURTY_SEVEN,	DEC	47
+ZERO,	DEC	0
+TEN,	DEC	10
+ONE,	DEC	1
+
+/variables
+OPERATION,	HEX	0
+NUMBER,	DEC	0
+RESULT,	DEC	0
+VALUE,	DEC	0
+MINIMUM,	DEC	0
+TEMP,	DEC	0
+NUMBER1,	DEC	0
+NUMBER2,	DEC	0
+COUNTER,	DEC	0
+QUOTIENT,	DEC	0
+
